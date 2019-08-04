@@ -4,7 +4,7 @@
     "homepage": "https://github.com/uspdev/cache",
     "description": "Library to conect to cache server",
     "type": "library",
-    "license": "LGPL-V3",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Masaki Kawabata Neto",
