@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once '../src/Cache.php';
 include_once 'pessoa_class.php';
 
 use Uspdev\Cache\Cache;

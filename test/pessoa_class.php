@@ -1,4 +1,5 @@
 <?php
+// classe a ser utilizada como fake data para os testes
 class Pessoa
 {
     public function lista($param = null)
