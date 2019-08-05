@@ -16,5 +16,7 @@
             "Uspdev\\Cache\\": "src"
         }
     },
-    "require": {}
+    "require": {
+        "ext-memcached" : "*"
+    }
 }
