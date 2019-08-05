@@ -28,19 +28,29 @@ Por padrão os caches expiram depois de 4 horas ou reiniciando o servidor memcac
 
 Caso típico de uma consulta ao BD:
 
-    $pessoa = new Pessoa();
-    $lista = $pessoa->lista();
+```php
+$pessoa = new Pessoa();
+$lista = $pessoa->lista();
+```
 
 Usando o cache, a consulta fica assim:
 
-    $pessoa = new Pessoa();
-    $cache = new cache($pessoa);
-    $lista = $cache->getCached('lista','');
+```php
+use Uspdev\Cache\Cache;
+
+$pessoa = new Pessoa();
+$cache = new Cache($pessoa);
+$lista = $cache->getCached('lista','');
+```
 
 Se o método for estático fica assim:
 
-    $cache = new cache();
-    $lista = $cache->getCached('Pessoa::lista','');
+```php
+use Uspdev\Cache\Cache;
+
+$cache = new Cache();
+$lista = $cache->getCached('Pessoa::lista','');
+```
 
 ## Testes
 

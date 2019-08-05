@@ -1,5 +1,5 @@
 <?php
-require_once '../src/Cache.php';
+require_once dirname(__FILE__).'/../src/Cache.php';
 include_once 'pessoa_class.php';
 
 use Uspdev\Cache\Cache;
