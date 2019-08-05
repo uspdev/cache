@@ -30,7 +30,7 @@ Caso típico de uma consulta ao BD:
 
 ```php
 $pessoa = new Pessoa();
-$lista = $pessoa->lista();
+$lista = $pessoa->lista('nome');
 ```
 
 Usando o cache, a consulta fica assim:
@@ -40,7 +40,7 @@ use Uspdev\Cache\Cache;
 
 $pessoa = new Pessoa();
 $cache = new Cache($pessoa);
-$lista = $cache->getCached('lista','');
+$lista = $cache->getCached('lista','nome');
 ```
 
 Se o método for estático fica assim:
@@ -49,11 +49,11 @@ Se o método for estático fica assim:
 use Uspdev\Cache\Cache;
 
 $cache = new Cache();
-$lista = $cache->getCached('Pessoa::lista','');
+$lista = $cache->getCached('Pessoa::lista','nome');
 ```
 
 ## Testes
 
-Rode alguns testes 
+Rode alguns testes para ver o funcionamento.
 
     php test/runtests.php
