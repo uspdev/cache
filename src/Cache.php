@@ -9,22 +9,31 @@ class Cache
 
     public function __construct(object $classToBeCached = null)
     {
-        // vamos conectar o servidor memcached local
-        $cache = new \Memcached();
-        if (empty($cache->getServerList())) {
-            $cache->addServer('127.0.0.1', 11211);
-        }
-        if (!$cache->getVersion()) {
-            die('sem memcached');
-        }
-        $this->cache = $cache;
-
         // vamos injetar a chasse que queremos cachear
         $this->cachedClass = $classToBeCached;
+
+        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE == true) {
+            // nao procuraremos o memcached
+        } else {
+            // vamos conectar o servidor memcached local
+            $cache = new \Memcached();
+            if (empty($cache->getServerList())) {
+                $cache->addServer('127.0.0.1', 11211);
+            }
+            if (!$cache->getVersion()) {
+                die('sem memcached');
+            }
+            $this->cache = $cache;
+        }
     }
 
     public function getCached(string $cachedMethod, $param = null)
     {
+        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
+            // se o cache estiver desativado vamos ignorar a parte de cache
+            return $this->getRaw($cachedMethod, $param);
+        }
+
         // criar chave
         $this->setCacheKey($cachedMethod, $param);
 
@@ -49,6 +58,11 @@ class Cache
         } else {
             // instanciado
             $data = $param ? $this->cachedClass->$cachedMethod($param) : $this->cachedClass->$cachedMethod();
+        }
+
+        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
+            // se o cache estiver desativado vamos ignorar a parte de cache
+            return $data;
         }
 
         // criar chave

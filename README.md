@@ -15,12 +15,12 @@ Por padrão os caches expiram depois de 4 horas ou reiniciando o servidor memcac
 ## Instalação e configuração
 
 ### Instalação do servidor memcached
-* no ubuntu, para instalar o memcached use ```apt install memcached```
+* no ubuntu 1804, para instalar o memcached use ```apt install memcached```
 * acrescente no ```/etc/memcached.conf``` a linha ```I = 5M ``` para aumentar para 5MB o tamanho de cada objeto ou outro valor que achar conveniente
 * reinicie o serviço ``` service memcached restart ```
 
 ### Instalação da biblioteca
-* Para ubuntu use ``` apt install php-memcached ```
+* Para ubuntu 1804 use ``` apt install php-memcached ```
 * reinicie o apache ``` service apache2 reload ```
 * Coloque a biblioteca como dependencia ``` composer require USPdev/cache ```
 
@@ -57,3 +57,13 @@ $lista = $cache->getCached('Pessoa::lista','nome');
 Rode alguns testes para ver o funcionamento.
 
     php test/runtests.php
+
+## Parâmetros
+
+Se por algum motivo você quiser desabilitar o cache defina a constante abaixo.
+
+```php
+define('USPDEV_CACHE_DISABLE',true);
+```
+
+Dessa forma a biblioteca de cache vai fazer apenas um bypass das consultar que passarem por ela.

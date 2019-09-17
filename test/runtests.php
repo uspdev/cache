@@ -10,3 +10,7 @@ include 'test_class.php';
 
 echo PHP_EOL . 'test_static' . PHP_EOL;
 include 'test_static.php';
+
+echo PHP_EOL . 'test static com cache desabilitado' . PHP_EOL;
+define('USPDEV_CACHE_DISABLE', true);
+include 'test_static.php';
