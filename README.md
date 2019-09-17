@@ -22,7 +22,7 @@ Por padrão os caches expiram depois de 4 horas ou reiniciando o servidor memcac
 ### Instalação da biblioteca
 * Para ubuntu 1804 use ``` apt install php-memcached ```
 * reinicie o apache ``` service apache2 reload ```
-* Coloque a biblioteca como dependencia ``` composer require USPdev/cache ```
+* Coloque a biblioteca como dependencia ``` composer require uspdev/cache ```
 
 ## Utilização
 
@@ -43,13 +43,20 @@ $cache = new Cache($pessoa);
 $lista = $cache->getCached('lista','nome');
 ```
 
+ou 
+
+```php
+$lista = $cache->getCached('lista',['nome']);
+```
+
+Isso quer dizer que se o método pessoa->Lista() aceitar mais de um parâmetro você pode passar a lista de parâmetros como array que o cache vai transformar em uma lista de argumentos.
 Se o método for estático fica assim:
 
 ```php
 use Uspdev\Cache\Cache;
 
 $cache = new Cache();
-$lista = $cache->getCached('Pessoa::lista','nome');
+$lista = $cache->getCached('Pessoa::lista',['nome']);
 ```
 
 ## Testes

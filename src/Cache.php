@@ -49,15 +49,19 @@ class Cache
         return $data;
     }
 
-    public function getRaw(string $cachedMethod, $param = null)
+    public function getRaw(string $cachedMethod, $param)
     {
+        // O param pode ser string ou array de strings. 
+        // Se for string vamos converter para array e usar unpack na chamada do método
+        $param = is_array($param) ? $param : [$param];
+
         // vamos pegar os dados sem verificar o cache
         if (strpos($cachedMethod, '::')) {
             // estático
-            $data = $param ? $cachedMethod($param) : $cachedMethod();
+            $data = $param ? $cachedMethod(...$param) : $cachedMethod();
         } else {
             // instanciado
-            $data = $param ? $this->cachedClass->$cachedMethod($param) : $this->cachedClass->$cachedMethod();
+            $data = $param ? $this->cachedClass->$cachedMethod(...$param) : $this->cachedClass->$cachedMethod();
         }
 
         if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
@@ -75,7 +79,7 @@ class Cache
         return $data;
     }
 
-    private function setCacheKey(string $cachedMethod, $param = null)
+    private function setCacheKey(string $cachedMethod, $param)
     {
         // vamos criar uma chave adequada dependente dos parametros
         $paramString = is_array($param) ? implode('-', $param) : $param;
