@@ -3,9 +3,8 @@ namespace Uspdev\cache;
 
 class Cache
 {
-    // default values for expiry
-    public $longExpiry = 4 * 60 * 60; // expiry in 4 hours
-    public $shortExpiry = 10 * 60; //10 minutes
+    // default value for expiry
+    public $expiry = 4 * 60 * 60; // expiry in 4 hours
 
     public function __construct(object $classToBeCached = null)
     {
@@ -24,6 +23,11 @@ class Cache
                 die('sem memcached');
             }
             $this->cache = $cache;
+        }
+
+        // o tempo de expiração pode ser definido por constante ou setado sob demanda
+        if (defined('USPDEV_CACHE_EXPIRY')) {
+            $this->expiry = USPDEV_CACHE_EXPIRY;
         }
     }
 
@@ -73,7 +77,7 @@ class Cache
         $this->setCacheKey($cachedMethod, $param);
 
         // e vamos colocar no cache
-        $this->cache->set($this->cacheKey, $data, $this->longExpiry);
+        $this->cache->set($this->cacheKey, $data, $this->expiry);
         $this->cacheStatus = $this->cache->getResultCode();
 
         return $data;
