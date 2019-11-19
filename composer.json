@@ -1,8 +1,7 @@
 {
     "name": "uspdev/cache",
-    "minimum-stability": "dev",
     "homepage": "https://github.com/uspdev/cache",
-    "description": "Library to conect to cache server",
+    "description": "Library to connect to cache server",
     "type": "library",
     "license": "GPL-3.0-or-later",
     "authors": [
