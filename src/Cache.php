@@ -1,5 +1,5 @@
 <?php
-namespace Uspdev\cache;
+namespace Uspdev\Cache;
 
 class Cache
 {
@@ -86,7 +86,7 @@ class Cache
     private function setCacheKey(string $cachedMethod, $param)
     {
         // vamos criar uma chave adequada dependente dos parametros
-        $paramString = is_array($param) ? implode('-', $param) : $param;
+        $paramString = serialize($param);
 
         if (empty($this->cachedClass)) {
             $this->cacheKey = $cachedMethod . '-' . $paramString;
