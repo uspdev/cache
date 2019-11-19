@@ -74,3 +74,10 @@ define('USPDEV_CACHE_DISABLE',true);
 ```
 
 Dessa forma a biblioteca de cache vai fazer apenas um bypass das consultar que passarem por ela.
+
+Para alterar o tempo de expiração há duas formas:
+
+* por constante:  ```define('USPDEV_CACHE_EXPIRY', tempo_em_segundos);```
+* setando diretamente: ```$cache->expiry = tempo_em_segundos;```
+
+Se o tempo de expiração for 0, o cache nunca vai expirar.
