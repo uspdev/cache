@@ -6,7 +6,9 @@ class Cache
     // default value for expiry
     public $expiry = 4 * 60 * 60; // expiry in 4 hours
 
-    public function __construct(object $classToBeCached = null)
+    //public function __construct(object $classToBeCached = null) // esta construção é a partir do PHP 7.2
+    // por enquanto vamos manter compatibilidade com php 7.0 - Masaki 11/2019
+    public function __construct($classToBeCached = null)
     {
         // vamos injetar a chasse que queremos cachear
         $this->cachedClass = $classToBeCached;
