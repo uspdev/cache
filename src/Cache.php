@@ -4,16 +4,18 @@ namespace Uspdev\Cache;
 class Cache
 {
     // default value for expiry
-    public $expiry = 4 * 60 * 60; // expiry in 4 hours
+    public $expiry;
+    public $smallData;
 
-    //public function __construct(object $classToBeCached = null) // esta construção é a partir do PHP 7.2
+    // public function __construct(object $classToBeCached = null)
+    // esta construção acima é a partir do PHP 7.2
     // por enquanto vamos manter compatibilidade com php 7.0 - Masaki 11/2019
     public function __construct($classToBeCached = null)
     {
         // vamos injetar a chasse que queremos cachear
         $this->cachedClass = $classToBeCached;
 
-        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE == true) {
+        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
             // nao procuraremos o memcached
         } else {
             // vamos conectar o servidor memcached local
@@ -27,29 +29,46 @@ class Cache
             $this->cache = $cache;
         }
 
-        // o tempo de expiração pode ser definido por constante ou setado sob demanda
+        // o tempo de expiração pode ser definido por constante 
+        // ou setado sob demanda
         if (defined('USPDEV_CACHE_EXPIRY')) {
             $this->expiry = USPDEV_CACHE_EXPIRY;
+        } else {
+            $this->expiry = 4 * 60 * 60; // Valor padrão: 4 horas
+        }
+
+        // vamos definir a partir de qual tamanho de dado vamos cachear
+        // isso para não cachear null, vazio, etc
+        // para nao cachear mensagens de erro, pode ser necessário aumentar um pouco
+        if (defined('USPDEV_CACHE_SMALL')) {
+            $this->smallData = USPDEV_CACHE_SMALL;
+        } else {
+            $this->smallData = 32 ; // Valor padrão: 32 bytes
         }
     }
 
     public function getCached(string $cachedMethod, $param = null)
     {
+        // se o cache estiver desativado vamos ignorar a parte de cache e retornar dados brutos
         if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
-            // se o cache estiver desativado vamos ignorar a parte de cache
             return $this->getRaw($cachedMethod, $param);
         }
 
-        // criar chave
+        // se cache estiver ativado, vamos criar a chave
         $this->setCacheKey($cachedMethod, $param);
 
-        // verifica o cache
+        // e verificar se o dado está no cache
         $data = $this->cache->get($this->cacheKey);
         $this->cacheStatus = $this->cache->getResultCode();
 
+        // se não está no cache ou está expirado, vamos buscar na classe e colocar no cache
         if ($this->cacheStatus != \Memcached::RES_SUCCESS) {
-            // não está no cache ou está expirado, vamos buscar na classe e colocar no cache
             $data = $this->getRaw($cachedMethod, $param);
+
+            // não vamos cachear dados pequenos
+            if (strlen(serialize($data)) > $this->smallData) {
+                $this->setCacheData($data); // o $this->cacheKey deve estar previamentte criado
+            }
         }
 
         return $data;
@@ -57,7 +76,7 @@ class Cache
 
     public function getRaw(string $cachedMethod, $param)
     {
-        // O param pode ser string ou array de strings. 
+        // O param pode ser string ou array de strings.
         // Se for string vamos converter para array e usar unpack na chamada do método
         $param = is_array($param) ? $param : [$param];
 
@@ -70,19 +89,14 @@ class Cache
             $data = $param ? $this->cachedClass->$cachedMethod(...$param) : $this->cachedClass->$cachedMethod();
         }
 
-        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
-            // se o cache estiver desativado vamos ignorar a parte de cache
-            return $data;
-        }
+        return $data;
+    }
 
-        // criar chave
-        $this->setCacheKey($cachedMethod, $param);
-
-        // e vamos colocar no cache
+    private function setCacheData($data)
+    {
+        // Vamos colocar no cache
         $this->cache->set($this->cacheKey, $data, $this->expiry);
         $this->cacheStatus = $this->cache->getResultCode();
-
-        return $data;
     }
 
     private function setCacheKey(string $cachedMethod, $param)
