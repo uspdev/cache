@@ -7,6 +7,8 @@ Os dados ficam guardados no cache em função dos parâmetros passados para o m�
 
 Por padrão os caches expiram depois de 4 horas ou reiniciando o servidor memcached.
 
+Por padrão dados menores que 32 bytes não serão cacheados.
+
 ## Requisitos
 
 * PHP > 7.0
@@ -78,7 +80,22 @@ Dessa forma a biblioteca de cache vai fazer apenas um bypass das consultar que p
 
 Para alterar o tempo de expiração há duas formas:
 
-* por constante:  ```define('USPDEV_CACHE_EXPIRY', tempo_em_segundos);```
-* setando diretamente: ```$cache->expiry = tempo_em_segundos;```
+* por constante (antes de instanciar):  
+```php
+define('USPDEV_CACHE_EXPIRY', tempo_em_segundos);
+```
+* setando diretamente (depois de instanciar): 
+```php
+$cache->expiry = tempo_em_segundos;
+```
 
 Se o tempo de expiração for 0, o cache nunca vai expirar.
+
+Você pode definir a partir de qual tamanho de dados o cache vai ser utilizado. O valor padrão é 32 bytes para poder excluir retornos vazios e algumas mensagens de erro. Se quiser modificar esse tamanho use:
+```php
+define('USPDEV_CACHE_SMALL', tamanho_em_bytes);
+```
+ou
+```php
+$cache->smallData = tamanho_em_bytes;
+```
