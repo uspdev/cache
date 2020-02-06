@@ -20,3 +20,7 @@ include 'test_expiry.php';
 echo PHP_EOL . 'test static com cache desabilitado' . PHP_EOL;
 define('USPDEV_CACHE_DISABLE', true);
 include 'test_static.php';
+
+echo PHP_EOL . 'test static definindo USPDEV_CACHE_SMALL = 1K' . PHP_EOL;
+define('USPDEV_CACHE_SMALL', 1024);
+include 'test_static.php';
