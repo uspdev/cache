@@ -4,7 +4,7 @@ class Pessoa
 {
     public static function lista($param = null)
     {
-        $lista[0] = 'Jose Delgado';
+        $lista[0] = 'Jose Delgado - aumentado para não ser dado pequeeeeeeenooooooooo';
         $lista[1] = 'William Buckland ';
         $lista[2] = 'Francis Crick';
         $lista[3] = 'Jack Parsons';
@@ -15,7 +15,7 @@ class Pessoa
 
     public static function lista2($param1, $param2)
     {
-        $lista[0] = 'Jose Delgado';
+        $lista[0] = 'Jose Delgado - aumentado para não ser dado pequeeeeeeenooooooooo';
         $lista[1] = 'William Buckland ';
         $lista[2] = 'Francis Crick';
         $lista[3] = 'Jack Parsons';
