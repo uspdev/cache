@@ -25,14 +25,14 @@ class Cache
         // ou setado sob demanda
         $this->expiry = 4 * 60 * 60; // Valor padrão: 4 horas
         $this->expiry = defined('USPDEV_CACHE_EXPIRY') ? USPDEV_CACHE_EXPIRY : $this->expiry;
-        $this->expiry = getenv('USPDEV_CACHE_EXPIRY') ? getenv('USPDEV_CACHE_EXPIRY') : $this->expiry;
+        $this->expiry = getenv('USPDEV_CACHE_EXPIRY') ? intval(getenv('USPDEV_CACHE_EXPIRY')) : $this->expiry;
 
         // vamos definir a partir de qual tamanho de dado vamos cachear
         // isso para não cachear null, vazio, etc
         // para nao cachear mensagens de erro, pode ser necessário aumentar um pouco
         $this->small = 32; // Valor padrão: 32 bytes
         $this->small = defined('USPDEV_CACHE_SMALL') ? USPDEV_CACHE_SMALL : $this->small;
-        $this->small = getenv('USPDEV_CACHE_SMALL') ? getenv('USPDEV_CACHE_SMALL') : $this->small;
+        $this->small = getenv('USPDEV_CACHE_SMALL') ? intval(getenv('USPDEV_CACHE_SMALL')) : $this->small;
 
         if ($this->disable) {
             // se desativado, nao procuraremos o servidor memcached
