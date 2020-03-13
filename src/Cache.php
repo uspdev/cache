@@ -5,18 +5,37 @@ class Cache
 {
     // default value for expiry
     public $expiry;
-    public $smallData;
+    public $small;
+    public $disable;
 
     // public function __construct(object $classToBeCached = null)
     // esta construção acima é a partir do PHP 7.2
     // por enquanto vamos manter compatibilidade com php 7.0 - Masaki 11/2019
     public function __construct($classToBeCached = null)
     {
-        // vamos injetar a chasse que queremos cachear
+        // vamos injetar a classe que queremos cachear
         $this->cachedClass = $classToBeCached;
 
-        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
-            // nao procuraremos o memcached
+        // vamos verificar se o cache está desativado nas constantes ou no ambiente
+        $this->disable = false;
+        $this->disable = defined('USPDEV_CACHE_DISABLE') ? USPDEV_CACHE_DISABLE : $this->disable;
+        $this->disable = getenv('USPDEV_CACHE_DISABLE') ? getenv('USPDEV_CACHE_DISABLE') : $this->disable;
+
+        // o tempo de expiração pode ser definido por constante, ambiente
+        // ou setado sob demanda
+        $this->expiry = 4 * 60 * 60; // Valor padrão: 4 horas
+        $this->expiry = defined('USPDEV_CACHE_EXPIRY') ? USPDEV_CACHE_EXPIRY : $this->expiry;
+        $this->expiry = getenv('USPDEV_CACHE_EXPIRY') ? getenv('USPDEV_CACHE_EXPIRY') : $this->expiry;
+
+        // vamos definir a partir de qual tamanho de dado vamos cachear
+        // isso para não cachear null, vazio, etc
+        // para nao cachear mensagens de erro, pode ser necessário aumentar um pouco
+        $this->small = 32; // Valor padrão: 32 bytes
+        $this->small = defined('USPDEV_CACHE_SMALL') ? USPDEV_CACHE_SMALL : $this->small;
+        $this->small = getenv('USPDEV_CACHE_SMALL') ? getenv('USPDEV_CACHE_SMALL') : $this->small;
+
+        if ($this->disable) {
+            // se desativado, nao procuraremos o servidor memcached
         } else {
             // vamos conectar o servidor memcached local
             $cache = new \Memcached();
@@ -28,29 +47,12 @@ class Cache
             }
             $this->cache = $cache;
         }
-
-        // o tempo de expiração pode ser definido por constante 
-        // ou setado sob demanda
-        if (defined('USPDEV_CACHE_EXPIRY')) {
-            $this->expiry = USPDEV_CACHE_EXPIRY;
-        } else {
-            $this->expiry = 4 * 60 * 60; // Valor padrão: 4 horas
-        }
-
-        // vamos definir a partir de qual tamanho de dado vamos cachear
-        // isso para não cachear null, vazio, etc
-        // para nao cachear mensagens de erro, pode ser necessário aumentar um pouco
-        if (defined('USPDEV_CACHE_SMALL')) {
-            $this->smallData = USPDEV_CACHE_SMALL;
-        } else {
-            $this->smallData = 32 ; // Valor padrão: 32 bytes
-        }
     }
 
     public function getCached(string $cachedMethod, $param = null)
     {
         // se o cache estiver desativado vamos ignorar a parte de cache e retornar dados brutos
-        if (defined('USPDEV_CACHE_DISABLE') and USPDEV_CACHE_DISABLE) {
+        if ($this->disable) {
             return $this->getRaw($cachedMethod, $param);
         }
 
@@ -66,7 +68,7 @@ class Cache
             $data = $this->getRaw($cachedMethod, $param);
 
             // não vamos cachear dados pequenos
-            if (strlen(serialize($data)) > $this->smallData) {
+            if (strlen(serialize($data)) > $this->small) {
                 $this->setCacheData($data); // o $this->cacheKey deve estar previamentte criado
             }
         }
@@ -90,6 +92,14 @@ class Cache
         }
 
         return $data;
+    }
+
+    public function getStatus()
+    {
+        $ret['expiry'] = $this->expiry;
+        $ret['smallData'] = $this->small;
+        $ret['disable'] = $this->disable ? 'sim' : 'nao';
+        return $ret;
     }
 
     private function setCacheData($data)

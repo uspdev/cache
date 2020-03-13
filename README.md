@@ -25,7 +25,7 @@ Por padrão dados menores que 32 bytes não serão cacheados.
 ### Instalação da biblioteca
 * Para ubuntu 1804, debian 9, debian 10: use ``` apt install php-memcached ```
 * reinicie o apache ``` service apache2 reload ```
-* Coloque a biblioteca como dependencia ``` composer require uspdev/cache ```
+* Coloque a biblioteca como dependência ``` composer require uspdev/cache ```
 
 ## Utilização
 
@@ -70,19 +70,22 @@ Rode alguns testes para ver o funcionamento.
 
 ## Parâmetros
 
-Se por algum motivo você quiser desabilitar o cache defina a constante abaixo.
+Se por algum motivo você quiser desabilitar o cache defina a constante abaixo. Isso é útil no ambiente de dev.
 
 ```php
-define('USPDEV_CACHE_DISABLE',true);
+putenv('USPDEV_CACHE_DISABLE=1'); //ou
+define('USPDEV_CACHE_DISABLE', true);
 ```
 
 Dessa forma a biblioteca de cache vai fazer apenas um bypass das consultar que passarem por ela.
 
+O uso de variáveis de ambiente será preferível ao invés de usar constantes, que poderá ser removido no futuro.
+
 Para alterar o tempo de expiração há duas formas:
 
-* por constante (antes de instanciar):  
+* por variável de ambiente (antes de instanciar):  
 ```php
-define('USPDEV_CACHE_EXPIRY', tempo_em_segundos);
+putenv('USPDEV_CACHE_EXPIRY=tempo_em_segundos');
 ```
 * setando diretamente (depois de instanciar): 
 ```php
@@ -91,11 +94,11 @@ $cache->expiry = tempo_em_segundos;
 
 Se o tempo de expiração for 0, o cache nunca vai expirar.
 
-Você pode definir a partir de qual tamanho de dados o cache vai ser utilizado. O valor padrão é 32 bytes para poder excluir retornos vazios e algumas mensagens de erro. Se quiser modificar esse tamanho use:
+Você pode definir a partir de qual tamanho de dados o cache vai ser utilizado. O valor padrão são 32 bytes para poder excluir retornos vazios e algumas mensagens de erro. Se quiser modificar esse tamanho use:
 ```php
-define('USPDEV_CACHE_SMALL', tamanho_em_bytes);
+putenv('USPDEV_CACHE_SMALL=tamanho_em_bytes');
 ```
 ou
 ```php
-$cache->smallData = tamanho_em_bytes;
+$cache->small = tamanho_em_bytes;
 ```

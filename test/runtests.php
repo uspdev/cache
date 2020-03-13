@@ -18,9 +18,14 @@ echo PHP_EOL . 'test_static_multiple modificando expiracao' . PHP_EOL;
 include 'test_expiry.php';
 
 echo PHP_EOL . 'test static com cache desabilitado' . PHP_EOL;
-define('USPDEV_CACHE_DISABLE', true);
+putenv('USPDEV_CACHE_DISABLE=1');
 include 'test_static.php';
 
 echo PHP_EOL . 'test static definindo USPDEV_CACHE_SMALL = 1K' . PHP_EOL;
+putenv('USPDEV_CACHE_DISABLE=0');
 define('USPDEV_CACHE_SMALL', 1024);
 include 'test_static.php';
+
+echo PHP_EOL . 'test status' . PHP_EOL;
+include 'test_status.php';
+
