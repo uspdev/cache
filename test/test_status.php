@@ -4,8 +4,8 @@ use Uspdev\Cache\Cache;
 
 echo 'Valores padrão: ';
 $cache = new Cache();
-echo json_encode($cache->status());
-echo PHP_EOL;
+echo json_encode($cache->status()), PHP_EOL;
+unset($cache);
 
 echo 'Modificando: ';
 putenv('USPDEV_CACHE_DISABLE=1');
