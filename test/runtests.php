@@ -29,3 +29,5 @@ include 'test_static.php';
 echo PHP_EOL . 'test status' . PHP_EOL;
 include 'test_status.php';
 
+echo PHP_EOL . 'test flush' . PHP_EOL;
+include 'test_flush.php';

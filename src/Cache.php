@@ -99,7 +99,31 @@ class Cache
         $ret['expiry'] = $this->expiry;
         $ret['smallData'] = $this->small;
         $ret['disable'] = $this->disable ? 'sim' : 'nao';
+        $ret['version'] = 'não disponível';
+        if (!$this->disable) {
+            $stats = $this->cache->getStats();
+            $stats = array_pop($stats);
+            $ret['curr_items'] = $stats['curr_items'];
+            $ret['get_hits'] = $stats['get_hits'];
+            $ret['get_misses'] = $stats['get_misses'];
+            $ret['version'] = $stats['version'];
+        }
+
         return $ret;
+    }
+
+    public function flush()
+    {
+        if (!$this->disable) {
+            if ($this->cache->flush()) {
+                return true;
+            } else {
+                echo 'Erro na limpeza do cache: ', $this->cache->getResultCode();
+                echo $this->cache->getResultMessage(), PHP_EOL;
+                exit;
+            }
+        }
+        return true;
     }
 
     private function setCacheData($data)
