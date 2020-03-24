@@ -94,7 +94,7 @@ class Cache
         return $data;
     }
 
-    public function getStatus()
+    public function status()
     {
         $ret['expiry'] = $this->expiry;
         $ret['smallData'] = $this->small;
