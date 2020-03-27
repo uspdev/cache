@@ -134,7 +134,7 @@ class Cache
     }
 
     private function setCacheKey(string $cachedMethod, $param)
-    {   
+    {
         // vamos criar uma chave adequada dependente dos parametros
         $paramString = serialize($param);
 
