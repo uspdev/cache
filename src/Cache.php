@@ -139,9 +139,9 @@ class Cache
         $paramString = serialize($param);
 
         if (empty($this->cachedClass)) {
-            $this->cacheKey = $cachedMethod . '-' . $paramString;
+            $this->cacheKey = md5($cachedMethod . '-' . $paramString);
         } else {
-            $this->cacheKey = get_class($this->cachedClass) . '-' . $cachedMethod . '-' . $paramString;
+            $this->cacheKey = md5(get_class($this->cachedClass) . '-' . $cachedMethod . '-' . $paramString);
         }
     }
 }
