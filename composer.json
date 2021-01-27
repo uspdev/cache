@@ -16,7 +16,6 @@
         }
     },
     "require": {
-        "php": ">=7.0",
-        "ext-memcached" : "*"
+        "php": ">=7.0"
     }
 }
