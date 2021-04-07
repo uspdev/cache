@@ -49,7 +49,7 @@ class Cache
         }
     }
 
-    public function getCached(string $cachedMethod, $param = null)
+    public function getCached(string $cachedMethod, $param = null, $key = null)
     {
         // se o cache estiver desativado vamos ignorar a parte de cache e retornar dados brutos
         if ($this->disable) {
@@ -57,7 +57,7 @@ class Cache
         }
 
         // se cache estiver ativado, vamos criar a chave
-        $this->setCacheKey($cachedMethod, $param);
+        $this->setCacheKey($cachedMethod, $key ?? $param);
 
         // e verificar se o dado está no cache
         $data = $this->cache->get($this->cacheKey);
