@@ -1,6 +1,6 @@
 # Cache
 
-Biblioteca que cacheia resultados de métodos, geralmente consultas a banco de dados. Esta biblioteca funciona como um conector para o backend memcached. O servidor roda na máquina local.
+Biblioteca que cacheia resultados de métodos, geralmente consultas a banco de dados. Esta biblioteca funciona como um conector para o backend memcached. O servidor roda na máquina local (padrão).
 
 Pode ser usado em métodos de classes instanciadas e em métodos estáticos.
 
@@ -143,4 +143,11 @@ ou
 
 ```php
 $cache->small = tamanho_em_bytes;
+```
+
+Por padrão o servidor memcached está no servidor local (127.0.0.1), na porta 11211. Para mudar user as variáveis de ambiente:
+
+```php
+putenv('USPDEV_CACHE_SERVER=11.22.33.44');
+putenv('USPDEV_CACHE_PORT=12345');
 ```
