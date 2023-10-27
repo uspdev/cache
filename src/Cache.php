@@ -7,6 +7,8 @@ class Cache
     public $expiry;
     public $small;
     public $disable;
+    public $server;
+    public $port;
 
     // public function __construct(object $classToBeCached = null)
     // esta construção acima é a partir do PHP 7.2
@@ -34,13 +36,16 @@ class Cache
         $this->small = defined('USPDEV_CACHE_SMALL') ? USPDEV_CACHE_SMALL : $this->small;
         $this->small = getenv('USPDEV_CACHE_SMALL') ? intval(getenv('USPDEV_CACHE_SMALL')) : $this->small;
 
+        $this->server = getenv('USPDEV_CACHE_SERVER') ? getenv('USPDEV_CACHE_SERVER') : '127.0.0.1';
+        $this->port = getenv('USPDEV_CACHE_PORT') ? intval(getenv('USPDEV_CACHE_PORT')) : 11211;
+
         if ($this->disable) {
             // se desativado, nao procuraremos o servidor memcached
         } else {
             // vamos conectar o servidor memcached local
             $cache = new \Memcached();
             if (empty($cache->getServerList())) {
-                $cache->addServer('127.0.0.1', 11211);
+                $cache->addServer($this->server, $this->port);
             }
             if (!$cache->getVersion()) {
                 die('sem memcached');
