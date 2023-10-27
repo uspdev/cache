@@ -36,7 +36,7 @@ class Cache
         $this->small = defined('USPDEV_CACHE_SMALL') ? USPDEV_CACHE_SMALL : $this->small;
         $this->small = getenv('USPDEV_CACHE_SMALL') ? intval(getenv('USPDEV_CACHE_SMALL')) : $this->small;
 
-        $this->server = getenv('USPDEV_CACHE_SERVER') ? intval(getenv('USPDEV_CACHE_SERVER')) : '127.0.0.1';
+        $this->server = getenv('USPDEV_CACHE_SERVER') ? getenv('USPDEV_CACHE_SERVER') : '127.0.0.1';
         $this->port = getenv('USPDEV_CACHE_PORT') ? intval(getenv('USPDEV_CACHE_PORT')) : 11211;
 
         if ($this->disable) {
