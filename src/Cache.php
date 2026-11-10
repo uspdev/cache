@@ -8,6 +8,21 @@ class Cache
     public $small;
     public $disable;
 
+    // Declarações explícitas evitam avisos de propriedades dinâmicas no PHP 8.2+.
+    // Sem tipos nas propriedades para manter a compatibilidade com PHP 7.0.
+
+    // Objeto cujos métodos terão seus resultados armazenados em cache.
+    public $cachedClass;
+
+    // Cliente Memcached, inicializado quando o cache está habilitado.
+    public $cache;
+
+    // Chave que identifica o resultado do método e seus parâmetros no cache.
+    public $cacheKey;
+
+    // Código de resultado da última operação de leitura ou gravação no Memcached.
+    public $cacheStatus;
+
     // public function __construct(object $classToBeCached = null)
     // esta construção acima é a partir do PHP 7.2
     // por enquanto vamos manter compatibilidade com php 7.0 - Masaki 11/2019
